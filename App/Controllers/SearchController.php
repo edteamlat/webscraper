@@ -2,36 +2,19 @@
 
 namespace App\Controllers;
 
-use simplehtmldom\HtmlWeb;
-use simplehtmldom\HtmlDocument;
+use App\Scrapers\AmazonScraper;
 
 class SearchController
 {
     public function show()
     {
-        $clientWeb = new HtmlWeb;
-        $clientHtml = new HtmlDocument;
-        $html = $clientWeb->load('https://www.amazon.com/s/?field-keywords=bluetooth+keyboards');
-        $allNodes = $html->find('div[data-component-type=s-search-result]');
+        $amazon = new AmazonScraper('keyboard bluetooth');
+        $amazon->search()->sortDesc();
 
-        $results = [];
-        foreach ($allNodes as $node) {
-            $productNode = $clientHtml->load($node->innertext);
-            $image = $productNode->find('img', 0);
-            $title = $productNode->find('h2', 0);
-            $url = $productNode->find('h2 a', 0);
-            $price = $productNode->find('.a-offscreen', 0);
-
-            $results[] = [
-                'image' => $image->src,
-                'title' => $title->plaintext,
-                'url' => $url->href,
-                'price' => $price ? $price->plaintext : null,
-            ];
-        }
+        $amazonResults = $amazon->getResults();
 
         return view('search', [
-            'amazonResults' => $results,
+            'amazonResults' => $amazonResults,
         ]);
     }
 }
