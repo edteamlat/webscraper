@@ -1,6 +1,7 @@
 <?php
 
 use Core\App;
+use Core\Auth;
 
 App::set('config', require 'config.php');
 
@@ -11,4 +12,4 @@ if (App::get('config')['error_handling']) {
     error_reporting(E_ALL & ~E_DEPRECATED);
 }
 
-
+Auth::ensureSessionStarted();

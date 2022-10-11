@@ -4,6 +4,10 @@
 
 <?php require('partials/search-input.view.php') ?>
 
+<?php if (Core\Auth::check()) : ?>
+    <?php require('partials/save-search.view.php') ?>
+<?php endif ?>
+
 <div class="lists-container">
 
     <div class="list">
