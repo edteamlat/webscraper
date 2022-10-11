@@ -9,18 +9,18 @@ class SearchController
 {
     public function show()
     {
-        $amazon = new AmazonScraper($_GET['keywords']);
+        $amazon = new AmazonScraper(input('keywords'));
         $amazon->search();
 
-        $ebay = new EbayScraper($_GET['keywords']);
+        $ebay = new EbayScraper(input('keywords'));
         $ebay->search();
 
-        if ($_GET['sort'] == 'asc') {
+        if (input('sort') == 'asc') {
             $amazon->sortAsc();
             $ebay->sortAsc();
         }
 
-        if ($_GET['sort'] == 'desc') {
+        if (input('sort') == 'desc') {
             $amazon->sortDesc();
             $ebay->sortDesc();
         }
