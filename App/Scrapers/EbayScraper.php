@@ -85,6 +85,7 @@ class EbayScraper
 
     protected function getSinglePrice($price)
     {
-        return explode(' a USD', trim($price, 'USD'))[0];
+        $price = explode(' a USD', trim($price, 'USD'))[0];
+        return str_replace(' ', '', $price);
     }
 }

@@ -9,11 +9,21 @@ class SearchController
 {
     public function show()
     {
-        $amazon = new AmazonScraper('keyboard bluetooth logitech k830');
-        $amazon->search()->sortDesc();
+        $amazon = new AmazonScraper($_GET['keywords']);
+        $amazon->search();
 
-        $ebay = new EbayScraper('keyboard bluetooth logitech k830');
-        $ebay->search()->sortDesc();
+        $ebay = new EbayScraper($_GET['keywords']);
+        $ebay->search();
+
+        if ($_GET['sort'] == 'asc') {
+            $amazon->sortAsc();
+            $ebay->sortAsc();
+        }
+
+        if ($_GET['sort'] == 'desc') {
+            $amazon->sortDesc();
+            $ebay->sortDesc();
+        }
 
         return view('search', [
             'amazonResults' => $amazon->getResults(),

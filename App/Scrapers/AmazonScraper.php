@@ -49,9 +49,15 @@ class AmazonScraper
                 'image' => $image->src,
                 'title' => $title->plaintext,
                 'url' => $url->href,
-                'price' => $price ? trim($price->plaintext, '$') : null,
+                'price' => $price ? $this->getPrice($price->plaintext) : null,
             ];
         }
+    }
+
+    protected function getPrice($price)
+    {
+        $price = trim($price, '$');
+        return str_replace(',', '', $price);
     }
 
     public function getResults()
