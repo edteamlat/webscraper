@@ -14,6 +14,9 @@
                 <a href="search?keywords=<?= $search->keywords ?>" target="_blank">
                     <?= $search->keywords ?>
                 </a>
+                <form onsubmit="return confirm('¿Deseas realmente borrar esta búsqueda?');" style="display: inline;" action="/search/delete/<?= $search->id ?>" method="POST">
+                    <button type="submit">❌</button>
+                </form>
             </div>
         <?php endforeach ?>
 
