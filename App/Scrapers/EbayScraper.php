@@ -5,7 +5,7 @@ namespace App\Scrapers;
 use simplehtmldom\HtmlWeb;
 use simplehtmldom\HtmlDocument;
 
-class AmazonScraper
+class EbayScraper
 {
     protected $keywords;
 
@@ -13,9 +13,9 @@ class AmazonScraper
 
     protected $clientHtml;
 
-    protected $url = 'https://www.amazon.com/s/?field-keywords=';
+    protected $url = 'https://www.ebay.com/sch/i.html?_nkw=';
 
-    protected $querySelector = 'div[data-component-type=s-search-result]';
+    protected $querySelector = 'ul.srp-results .s-item';
 
     protected $results = [];
 
@@ -40,16 +40,16 @@ class AmazonScraper
     {
         foreach ($allNodes as $node) {
             $productNode = $this->clientHtml->load($node->innertext);
-            $image = $productNode->find('img', 0);
-            $title = $productNode->find('h2', 0);
-            $url = $productNode->find('h2 a', 0);
-            $price = $productNode->find('.a-offscreen', 0);
+            $image = $productNode->find('img.s-item__image-img', 0);
+            $title = $productNode->find('div.s-item__title', 0);
+            $url = $productNode->find('a.s-item__link', 0);
+            $price = $productNode->find('span.s-item__price', 0);
 
             $this->results[] = [
                 'image' => $image->src,
                 'title' => $title->plaintext,
                 'url' => $url->href,
-                'price' => $price ? trim($price->plaintext, '$') : null,
+                'price' => $price ? $this->getSinglePrice($price->plaintext) : null,
             ];
         }
     }
@@ -81,5 +81,10 @@ class AmazonScraper
         });
 
         return $this;
+    }
+
+    protected function getSinglePrice($price)
+    {
+        return explode(' a USD', trim($price, 'USD'))[0];
     }
 }
